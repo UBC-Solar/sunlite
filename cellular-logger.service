@@ -1,0 +1,15 @@
+[Unit]
+Description=Cellular CAN Logger
+After=network-online.target influxdb.service tailscaled.service
+Wants=network-online.target
+
+[Service]
+User=pi
+WorkingDirectory=/home/pi/src
+EnvironmentFile=/home/pi/src/.env
+ExecStart=/home/pi/src/.venv/bin/python /home/pi/src/cell_script.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
