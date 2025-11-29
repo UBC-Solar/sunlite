@@ -4,7 +4,7 @@
 
 Follow the steps below to fully install, configure, and run Sunlite's RPI-based Cellular System.
 
-1. System Requirements
+1. #### System Requirements
 
     Hardware
 
@@ -21,14 +21,14 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     - InfluxDB 2.x Instance (Local or ELEC Computer)
     - Tailscale
 
-2. Clone Repository on RPI
+2. #### Clone Repository on RPI
 
     ```bash
     git clone https://github.com/UBC-Solar/sunlite.git 
     cd sunlite
     ```
 
-3. Copy Environment Variables
+3. #### Copy Environment Variables
 
     Copy over the example environment and edit it to include your desired endpoints
 
@@ -44,7 +44,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     INFLUX_TOKEN="<replace_with_real_token>"
     ```
 
-4. Run Installation Scripts
+4. #### Run Installation Scripts
 
     Everything needed for the Pi (Python venv, dependencies, permissions, systemd files) is automated. 
 
@@ -61,7 +61,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     sudo bash install.sh
     ```
 
-5. Ensure Tailscale is Running
+5. #### Ensure Tailscale is Running
 
     First enable tailscale by running this command and setting tailscale up.
 
@@ -76,7 +76,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     tailscale ip
     ```
 
-6. Running the Service (Optional)
+6. #### Running the Script Manually or with Service (Optional)
 
     On the current variation of sunlite, you can run the script either manually or as a service. Manually running the script requires the user to *ssh* into the RPI each time, while as a service, the script runs on startup whenever the RPI has a solid network connection.
 
@@ -139,7 +139,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     journalctl -u cellular-logger -f
     ```
 
-7. Debugging and Testing
+7. #### Debugging and Testing
 
     Inside of the tools/ folder, there are multiple files to help test Sunlite's functionailty. The <can_messages.yaml> file MUST be updated whenever the DBC is updated for testing to be accurate.
 
