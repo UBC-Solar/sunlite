@@ -47,7 +47,7 @@ The script does the following:
 
 3. #### Setup: Serial, DBC, Influx Client
 
-    Serial Port
+    #### Serial Port
 
     ```bash
     try:
@@ -60,7 +60,7 @@ The script does the following:
     - timeout=1 → read() returns at least once per second.
     - If the port can’t be opened, the script throws a RuntimeError and exits.
 
-    DBC Database
+    #### DBC Database
 
     ```bash
     db = cantools.database.load_file(DBC_FILE)
@@ -69,7 +69,7 @@ The script does the following:
     - Loads all CAN message definitions from the DBC file.
     - Used later for ID → message lookup and payload decode.
 
-    Influx Client and Write API
+    #### Influx Client and Write API
 
     ```bash
     client = InfluxDBClient(
@@ -134,7 +134,7 @@ The script does the following:
     - _MSG_CACHE caches frame_id → message definition to avoid repeated lookups.
     - DBC_IDS is the set of all CAN IDs defined in the DBC.
 
-    ID to Message Lookup
+    #### ID to Message Lookup
 
     ```bash
     def _get_db_message(can_id: int):
@@ -188,7 +188,7 @@ The script does the following:
 
     - Then returning the can_id, source, cls_name, ts_seconds, measurements
 
-    Layout Fallback Message
+    #### Layout Fallback Message
 
     ```bash
     def decode_frame(raw21: bytes):
@@ -203,7 +203,7 @@ The script does the following:
 
 6. #### Influx Point Creation and Write
 
-    Building a Point
+    #### Building a Point
 
     ```bash
     def make_point(source: str, cls_name: str, ts_seconds: float, measurements: dict) -> Point:
@@ -236,7 +236,7 @@ The script does the following:
         - now (if USE_NOW_TIME=True)
         - decoded timestamp (if False)
 
-    Writing and Error Tracking
+    #### Writing and Error Tracking
 
     ```bash
     def write_to_influx(source: str, cls_name: str,
@@ -294,7 +294,7 @@ The script does the following:
 
 8. #### Counters and Shutdown
 
-    Counters
+    #### Counters
 
     ```bash
     counters = {
@@ -313,7 +313,7 @@ The script does the following:
     - How many decode/write errors occurred
     - How many CAN IDs were not found in the DBC
 
-    Shutdown Handler
+    #### Shutdown Handler
 
     ```bash
     def _shutdown(*_):
@@ -338,7 +338,7 @@ The script does the following:
         - Closes write_api, client, and serial port
         - Exits cleanly
 
-    Signals wired:
+    #### Signals wired:
 
     ```bash
     signal.signal(signal.SIGINT, _shutdown)
@@ -357,7 +357,7 @@ The script does the following:
         chunk = ser.read(CHUNK_SIZE)
     ```
 
-    Handling No Data
+    #### Handling No Data
 
     If chunk is empty:
     - Once per second, logs current stats:
@@ -366,7 +366,7 @@ The script does the following:
         - avg_decoded/s (ingest rate)
     - Then continues the loop.
 
-    Processing Data
+    #### Processing Data
 
     - Convert raw bytes to a hex string.
     - Pass into process_message with leftover hex buffer.
@@ -395,7 +395,7 @@ The script does the following:
         - decoded++
         - write_to_influx(...) called → possibly updates written or write_errors
     
-    Periodic Stats Log
+    #### Periodic Stats Log
 
     At the end of each loop iteration:
     - If ≥ 1 second since last log:
