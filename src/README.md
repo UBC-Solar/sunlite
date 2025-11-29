@@ -31,7 +31,7 @@ The script does the following:
     - dotenv          : loads environment variables from .env
     - logging         : structured logging to stdout (and systemd/journal)
 
-2. Configuration and Environment
+2. #### Configuration and Environment
 
     - InfluxDB config is read from environment variables:
         - INFLUX_URL, INFLUX_ORG, INFLUX_BUCKET, INFLUX_TOKEN
@@ -45,7 +45,7 @@ The script does the following:
         - True → timestamps use current system time
         - False → timestamps use the embedded CAN timestamp from the frame
 
-3. Setup: Serial, DBC, Influx Client
+3. #### Setup: Serial, DBC, Influx Client
 
     Serial Port
 
@@ -98,7 +98,7 @@ The script does the following:
         - flush every INF_FLUSH_INTERVAL_S seconds
     - Retries on write failures with exponential backoff.
 
-4. Timestamp Parsing
+4. #### Timestamp Parsing
 
     ```bash
     def parse_timestamp_seconds(ts8: bytes) -> float:
@@ -124,7 +124,7 @@ The script does the following:
     3. Big-endian unsigned 64-bit int milliseconds (>Q then / 1000)
     4. Fallback to big-endian double again if everything fails
 
-5. DBC Message Caching and Decode
+5. #### DBC Message Caching and Decode
 
     ```bash
     _MSG_CACHE: dict[int, cantools.database.can.message.Message | None] = {}
@@ -201,7 +201,7 @@ The script does the following:
     - First tries with_filler.
     - If that fails (e.g., decode error), falls back to no_filler.
 
-6. Influx Point Creation and Write
+6. #### Influx Point Creation and Write
 
     Building a Point
 
@@ -260,7 +260,7 @@ The script does the following:
         - write_errors increments
         - Logs first 10 errors and then every 1000th error (to avoid log spam)
 
-7. Hex Chunk Splitting and Frame Extraction
+7. #### Hex Chunk Splitting and Frame Extraction
 
     The serial port returns binary bytes. The logger expects hex-encoded lines ending with \r\n (0d0a in hex).
 
@@ -292,7 +292,7 @@ The script does the following:
     
     Returns the frames, buffer_hex
 
-8. Counters and Shutdown
+8. #### Counters and Shutdown
 
     Counters
 
@@ -345,7 +345,7 @@ The script does the following:
     signal.signal(signal.SIGTERM, _shutdown)
     ```
 
-9. Main Ingest Loop
+9. #### Main Ingest Loop
 
     ```bash
     def run():
@@ -403,7 +403,7 @@ The script does the following:
         - Log all counters + ingest rate
         - Update _last_log
 
-10. Script Entry
+10. #### Script Entry
 
     ```bash
     if __name__ == "__main__":
