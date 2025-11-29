@@ -1,6 +1,4 @@
-### Cellular Communications 
-
-#### Cellular Python Script Explanation
+### Cellular Python Script Explanation
 
 This document explains the full functionality of the CAN script.
 
@@ -16,7 +14,7 @@ The script does the following:
     - Writes them in batches to an InfluxDB 2.x bucket
     - Tracks stats (frames seen, decoded, written, errors) and logs them periodically
 
-1. Imports and Dependencies
+1. #### Imports and Dependencies
 
     ```bash
     from influxdb_client import InfluxDBClient, Point, WriteOptions
@@ -52,7 +50,7 @@ The script does the following:
     Serial Port
 
     ```bash
-        try:
+    try:
         ser = serial.Serial(SERIAL_PORT, BAUDRATE, timeout=1, rtscts=False)
     except Exception as e:
         raise RuntimeError(f"Failed to open {SERIAL_PORT}: {e}")
