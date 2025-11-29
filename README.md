@@ -2,27 +2,6 @@
 
 #### Set-up
 
-Sunlite Structure
-└── dbc/
-│   └── brightside.dbc
-├── installations/
-├── install.sh
-├── setup_python.sh
-├── setup_influxdb.sh
-├── setup_tailscale.sh
-├── cellular-logger.service
-├── src/
-│   └── influx_cellular/
-├── cell_script.py
-├── tools/
-├── simulate_can.py
-├── characterization.py
-├── can_messages.yaml
-├── README.md
-├── .env.example
-└── .gitignore
-
-
 Follow the steps below to fully install, configure, and run Sunlite's RPI-based Cellular System.
 
 1. System Requirements
@@ -43,6 +22,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     - Tailscale
 
 2. Clone Repository on RPI
+
     ```bash
     git clone https://github.com/UBC-Solar/sunlite.git 
     cd sunlite
