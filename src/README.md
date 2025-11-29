@@ -14,6 +14,17 @@ The script does the following:
     - Writes them in batches to an InfluxDB 2.x bucket
     - Tracks stats (frames seen, decoded, written, errors) and logs them periodically
 
+To manually run this script the user must enter the virtual environment on the RPI and directly run it from there.
+
+```bash
+source .venv/bin/activate
+
+cd src/influx_cellular
+python3 cell_script.py
+```
+
+The description below is a full part by part explanation on how each component within the script works to extract data sent from UART to the RPI, and then relayed to an influxDB server.
+
 1. #### Imports and Dependencies
 
     ```bash
@@ -338,7 +349,7 @@ The script does the following:
         - Closes write_api, client, and serial port
         - Exits cleanly
 
-    #### Signals wired:
+    Signals wired:
 
     ```bash
     signal.signal(signal.SIGINT, _shutdown)
