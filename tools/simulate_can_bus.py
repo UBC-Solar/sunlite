@@ -3,7 +3,7 @@ import time
 import yaml
 import signal
 import threading
-from pathlib import Path
+from   pathlib import Path
 import datetime
 import sys
 
@@ -11,6 +11,7 @@ ANSI_YELLOW = "\033[33m"
 ANSI_RESET = "\033[0m"
 RATE_SCALER = 1
 MSG_COUNT_IDX = 3
+
 global can_messages
 can_messages = {}
 
@@ -19,6 +20,7 @@ bus_lock = threading.Lock()
 TOTAL_SENT = 0
 
 STOP_EVENT = threading.Event()
+
 def get_rtc_data():
     """
     Get the current time and format it into an 8-byte data payload.
@@ -124,12 +126,15 @@ def send_message(bus, can_id, data, rate, dlc, board_delay, num_in_burst):
 def send_can_messages():
     # FOR UBUNTU PEOPLE
     # bus = can.interface.Bus(channel='can0', bustype='socketcan')
+    
     # FOR WINDOWS PEOPLE Use PCAN-USB adapter
     bus = can.interface.Bus(
         channel='PCAN_USBBUS1',   # first USB adapter
         bustype='pcan'
     )
+    
     load_can_messages('can_messages.yaml')
+    
     threads = []
     for can_id, (interval, data, dlc, count, board_delay, num_in_burst) in can_messages.items():
         thread = threading.Thread(

@@ -141,7 +141,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
 
 7. Debugging and Testing
 
-    Inside of the tools/ folder, there are multiple files to help test Sunlite's functionailty
+    Inside of the tools/ folder, there are multiple files to help test Sunlite's functionailty. The <can_messages.yaml> file MUST be updated whenever the DBC is updated for testing to be accurate.
 
     - simulate_can.py     : Generates test CAN frames of Solar's full CAN BUS without the necessary hardware
     - can_messages.yaml   : Template for CAN traffic, contains all of Solar's CAN messages

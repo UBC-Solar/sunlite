@@ -1,13 +1,13 @@
+from   influxdb_client import InfluxDBClient, Point, WriteOptions
+from   dotenv import load_dotenv
+from   datetime import datetime, timezone
 import sys
 import time
 import signal
 import struct
 import logging
-from   datetime import datetime, timezone
 import serial
 import cantools
-from   influxdb_client import InfluxDBClient, Point, WriteOptions
-from dotenv import load_dotenv
 import os
 
 # -------------------------------- CONFIG --------------------------------
@@ -27,6 +27,7 @@ INF_BATCH_SIZE       = 1000
 INF_FLUSH_INTERVAL_S = 0.5
 USE_NOW_TIME         = True
 
+# Enables logging to view errors/success rates
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s"
@@ -38,8 +39,9 @@ try:
 except Exception as e:
     raise RuntimeError(f"Failed to open {SERIAL_PORT}: {e}")
 
-db = cantools.database.load_file(DBC_FILE)
+db = cantools.database.load_file(DBC_FILE) # Loads DBC File
 
+# Sets up the influxDB client
 client = InfluxDBClient(
     url=INFLUX_URL,
     org=INFLUX_ORG,
@@ -47,6 +49,7 @@ client = InfluxDBClient(
     enable_gzip=False,
 )
 
+# Batch writing to influxDB
 write_api = client.write_api(
     write_options=WriteOptions(
         batch_size=INF_BATCH_SIZE,
@@ -62,6 +65,7 @@ write_api = client.write_api(
 print(f"INFLUX READY: {INFLUX_URL} org={INFLUX_ORG} bucket={INFLUX_BUCKET}")
 print(f"Listening on {SERIAL_PORT} @ {BAUDRATE} (USE_NOW_TIME={USE_NOW_TIME})")
 
+# Checks if the connection to influx is valid
 try:
     ok = client.ping()
     print("Influx ping OK" if ok else "Influx ping failed")
