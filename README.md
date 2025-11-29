@@ -47,18 +47,22 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     git clone https://github.com/UBC-Solar/sunlite.git 
     cd sunlite
     ```
-    
+
 3. Copy Environment Variables
 
     Copy over the example environment and edit it to include your desired endpoints
 
+    ```bash
     cp .env.example .env
     nano .env
+    ```
 
+    ```bash
     INFLUX_URL="http://<influx-ip>:8086"
     INFLUX_ORG="UBC Solar"
     INFLUX_BUCKET="<replace_with_real_bucket>"
     INFLUX_TOKEN="<replace_with_real_token>"
+    ```
 
 4. Run Installation Scripts
 
@@ -72,19 +76,25 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     - Configures Tailscale
     - Prepares the cellular logging services
 
+    ```bash
     cd installations
     sudo bash install.sh
+    ```
 
 5. Ensure Tailscale is Running
 
     First enable tailscale by running this command and setting tailscale up.
 
+    ```bash
     sudo tailscale up
+    ```
 
     Then, check Tailscale status to the RPI, after checking the status, a list of networks on the current Tailscale network will be revealed, check this RPI's Tailscale IP and ensure it is on the network and fully connected.
 
+    ```bash
     tailscale status
     tailscale ip
+    ```
 
 6. Running the Service (Optional)
 
@@ -92,10 +102,12 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
 
     To manually run the script the user must enter the virtual environment and directly run it from there.
 
+    ```bash
     source .venv/bin/activate
 
     cd src/influx_cellular
     python3 cell_script.py
+    ```
 
     To run the script as a service, the user must use the systemd service file provided in <installations/cellular-logger.service>. This is activated when the user ran *install.sh*. 
 
@@ -108,32 +120,44 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
 
     To stop this service temporarily until the next reboot, run the following command:
 
+    ```bash
     sudo systemctl stop cellular-logger
+    ```
 
     To disable this service and follows through even with reboots, run:
 
+    ```bash
     sudo systemctl stop cellular-logger
     sudo systemctl disable cellular-logger
+    ```
 
     START/AUTORUN SERVICE:
 
     To restart this service manually but not at the next reboot, use this following command:
 
+    ```bash
     sudo systemctl start cellular-logger
+    ```
 
     To enable autorun starting every reboot, utilize this command:
 
+    ```bash
     sudo systemctl enable cellular-logger
+    ```
 
     DEBUGGING:
 
     To check the status of the service, use this command:
 
+    ```bash
     sudo systemctl status cellular-logger
+    ```
 
     To view all the logs, use this command:
 
+    ```bash
     journalctl -u cellular-logger -f
+    ```
 
 7. Debugging and Testing
 
@@ -145,10 +169,14 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
 
     To run a simulation, run this command:
 
+    ```bash
     cd tools
     python3 simulate_can.py
+    ```
 
     To evaluate the total fields recieved by influxDB:
 
+    ```bash
     cd tools
     python3 characterization.py
+    ```
