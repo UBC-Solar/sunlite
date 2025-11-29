@@ -38,6 +38,7 @@ def get_rtc_data():
     day    = now.day           & 0xFF  # Byte 3
     month  = now.month         & 0xFF  # Byte 4
     year   = (now.year % 100)  & 0xFF  # Byte 5 (e.g., 2025 -> 25)
+    
     data = bytearray(8)
     data[0] = sec
     data[1] = minute
@@ -47,14 +48,17 @@ def get_rtc_data():
     data[5] = year
     data[6] = 0  # Reserved
     data[7] = 0  # Reserved
+    
     print("gei", sec, minute, hour, day, month, year)
     return data
 
 def load_can_messages(filename):
     # Use Path to handle the file path
     path = Path(__file__).parent / filename
+    
     with open(path, 'r') as file:
         messages = yaml.safe_load(file)
+        
     for msg in messages:
         can_id = str(msg['ID'])
         interval = msg['interval'] / 1000.0
@@ -66,13 +70,16 @@ def load_can_messages(filename):
         can_messages[can_id] = [interval, data, dlc, count, board_delay, num_in_burst]
 
 def signal_handler(sig, frame):
+    
     STOP_EVENT.set()
     print(ANSI_YELLOW + "\nExiting... Here are the message counts:" + ANSI_RESET)
     total_count = 0
+    
     for can_id, message_data in can_messages.items():
         count = message_data[MSG_COUNT_IDX]
         total_count += count
         print(ANSI_YELLOW  + f"ID: {can_id}, Count: {count}" + ANSI_RESET)
+        
     print(ANSI_YELLOW + f"Total count: {total_count}" + ANSI_RESET)
 
 def send_message(bus, can_id, data, rate, dlc, board_delay, num_in_burst):

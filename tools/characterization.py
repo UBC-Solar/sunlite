@@ -2,8 +2,8 @@ import pandas as pd
 from zoneinfo import ZoneInfo
 
 csv_path = "tools/nov25_2156.csv"
-start_local = "2025-11-25 21:58:00"   # Vancouver time
-end_local   = "2025-11-25 21:59:00"   # Vancouver time
+start_local = "2025-11-25 21:58:00"
+end_local   = "2025-11-25 21:59:00"
 
 local_tz = "America/Vancouver"
 
