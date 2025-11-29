@@ -29,24 +29,25 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
 
     Hardware
 
-    Raspberry Pi 4 B
-    SD Card with Raspberry Pi OS
-    USB-CAN adapter (e.g. PCAN)
-    LTE/5G Hotspot (e.g. NETGEAR)
-    Internet connection (Ethernet)
+    - Raspberry Pi 4 B
+    - SD Card with Raspberry Pi OS
+    - USB-CAN adapter (e.g. PCAN)
+    - LTE/5G Hotspot (e.g. NETGEAR)
+    - Internet connection (Ethernet)
 
     Software
 
-    Raspberry Pi OS (Bookworm)
-    Python 3.10+
-    InfluxDB 2.x Instance (Local or ELEC Computer)
-    Tailscale
+    - Raspberry Pi OS (Bookworm)
+    - Python 3.10+
+    - InfluxDB 2.x Instance (Local or ELEC Computer)
+    - Tailscale
 
 2. Clone Repository on RPI
-
+    ```bash
     git clone https://github.com/UBC-Solar/sunlite.git 
     cd sunlite
-
+    ```
+    
 3. Copy Environment Variables
 
     Copy over the example environment and edit it to include your desired endpoints
