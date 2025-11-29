@@ -55,8 +55,7 @@ def get_rtc_data():
     return data
 
 def load_can_messages(filename):
-    # Use Path to handle the file path
-    path = Path(__file__).parent / filename
+    path = Path(__file__).parent / filename # Use Path to handle the file path
     
     with open(path, 'r') as file:
         messages = yaml.safe_load(file)
@@ -72,7 +71,6 @@ def load_can_messages(filename):
         can_messages[can_id] = [interval, data, dlc, count, board_delay, num_in_burst]
 
 def signal_handler(sig, frame):
-    
     STOP_EVENT.set()
     print(ANSI_YELLOW + "\nExiting... Here are the message counts:" + ANSI_RESET)
     total_count = 0
@@ -101,6 +99,7 @@ def send_message(bus, can_id, data, rate, dlc, board_delay, num_in_burst):
                 )
             else:
                 message = can.Message(arbitration_id=int(can_id, 16), data=data[:dlc], is_extended_id=is_extended)
+                
             for _ in range(num_in_burst):
                 if STOP_EVENT.is_set():
                     break
@@ -115,6 +114,7 @@ def send_message(bus, can_id, data, rate, dlc, board_delay, num_in_burst):
                         if STOP_EVENT.is_set():
                             break
                         time.sleep(0.001)
+                        
         except can.CanError as e:
             print(f"Message NOT sent {e}")
 
