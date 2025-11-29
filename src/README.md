@@ -1,6 +1,6 @@
 ### Cellular Communications 
 
-## Cellular Python Script Explanation
+#### Cellular Python Script Explanation
 
 This document explains the full functionality of the CAN script.
 
