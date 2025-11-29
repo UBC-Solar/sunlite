@@ -2,30 +2,30 @@
 
 ## Set-up
 
-# Sunlite Structure
-
-├── dbc/
-│   ├── brightside.dbc
+## Sunlite Structure
+└── dbc/
+│   └── brightside.dbc
 ├── installations/
-│   ├── install.sh
-│   ├── setup_python.sh
-│   ├── setup_influxdb.sh
-│   ├── setup_tailscale.sh
-│   └── cellular-logger.service
+├── install.sh
+├── setup_python.sh
+├── setup_influxdb.sh
+├── setup_tailscale.sh
+├── cellular-logger.service
 ├── src/
 │   └── influx_cellular/
-│       └── cell_script.py
+├── cell_script.py
 ├── tools/
-│   ├── simulate_can.py
-│   ├── characterization.py
-│   └── can_messages.yaml
+├── simulate_can.py
+├── characterization.py
+├── can_messages.yaml
 ├── README.md
 ├── .env.example
 └── .gitignore
 
+
 Follow the steps below to fully install, configure, and run Sunlite's RPI-based Cellular System.
 
-1. # System Requirements
+1. ### System Requirements
 
     Hardware
 
@@ -42,12 +42,12 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     InfluxDB 2.x Instance (Local or ELEC Computer)
     Tailscale
 
-2. # Clone Repository on RPI
+2. ### Clone Repository on RPI
 
     git clone https://github.com/UBC-Solar/sunlite.git
     cd sunlite
 
-3. # Copy Environment Variables
+3. ### Copy Environment Variables
 
     Copy over the example environment and edit it to include your desired endpoints
 
@@ -59,7 +59,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     INFLUX_BUCKET="<replace_with_real_bucket>"
     INFLUX_TOKEN="<replace_with_real_token>"
 
-4. # Run Installation Scripts
+4. ### Run Installation Scripts
 
     Everything needed for the Pi (Python venv, dependencies, permissions, systemd files) is automated. 
 
@@ -74,7 +74,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     cd installations
     sudo bash install.sh
 
-5. # Ensure Tailscale is Running
+5. ### Ensure Tailscale is Running
 
     First enable tailscale by running this command and setting tailscale up.
 
@@ -85,7 +85,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     tailscale status
     tailscale ip
 
-6. # Running the Service (Optional)
+6. ### Running the Service (Optional)
 
     On the current variation of sunlite, you can run the script either manually or as a service. Manually running the script requires the user to *ssh* into the RPI each time, while as a service, the script runs on startup whenever the RPI has a solid network connection.
 
@@ -134,7 +134,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
 
     journalctl -u cellular-logger -f
 
-7. # Debugging and Testing
+7. ### Debugging and Testing
 
     Inside of the tools/ folder, there are multiple files to help test Sunlite's functionailty
 
