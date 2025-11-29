@@ -11,21 +11,20 @@ import cantools
 import os
 
 # -------------------------------- CONFIG --------------------------------
-load_dotenv()
+load_dotenv() # load data from the .env file
 
 INFLUX_URL    = os.getenv("INFLUX_URL")
 INFLUX_ORG    = os.getenv("INFLUX_ORG")
 INFLUX_BUCKET = os.getenv("INFLUX_BUCKET")
 INFLUX_TOKEN  = os.getenv("INFLUX_TOKEN")
-
 SERIAL_PORT          = "/dev/ttyUSB0"
-BAUDRATE             = 230400
+BAUDRATE             = 230400                
 FRAME_LEN            = 21
 CHUNK_SIZE           = 16384
-DBC_FILE             = "/home/pi/sunlite/dbc/brightside.dbc"
-INF_BATCH_SIZE       = 1000
+DBC_FILE             = "/home/pi/sunlite/dbc/brightside.dbc" # Path to DBC file instance
+INF_BATCH_SIZE       = 1000                                  # Batch size for batch writing
 INF_FLUSH_INTERVAL_S = 0.5
-USE_NOW_TIME         = True
+USE_NOW_TIME         = True                                  # Use timestamp function time if true, or CAN data if false
 
 # Enables logging to view errors/success rates
 logging.basicConfig(
@@ -35,7 +34,7 @@ logging.basicConfig(
 
 # -------------------------------- SETUP ---------------------------------
 try:
-    ser = serial.Serial(SERIAL_PORT, BAUDRATE, timeout=1, rtscts=False)
+    ser = serial.Serial(SERIAL_PORT, BAUDRATE, timeout=1, rtscts=False) # Opens serial, raises exception on failure
 except Exception as e:
     raise RuntimeError(f"Failed to open {SERIAL_PORT}: {e}")
 
@@ -98,6 +97,7 @@ def parse_timestamp_seconds(ts8: bytes) -> float:
 _MSG_CACHE: dict[int, cantools.database.can.message.Message | None] = {}
 DBC_IDS: set[int] = set(m.frame_id for m in db.messages)
 
+# Gets the message from cache
 def _get_db_message(can_id: int):
     msg = _MSG_CACHE.get(can_id)
     if msg is None:
@@ -108,6 +108,7 @@ def _get_db_message(can_id: int):
         _MSG_CACHE[can_id] = msg
     return msg
 
+# Decodes the messags based if filler is on or off, kept as failsafe
 def try_decode_layout(raw21: bytes, layout: str):
     """
     - with_filler: [0:8]=ts, [9:13]=id, [13:21]=payload
@@ -125,7 +126,7 @@ def try_decode_layout(raw21: bytes, layout: str):
     msg = _get_db_message(can_id)
 
     if msg is None:
-        raise KeyError(f"CAN ID 0x{can_id:X} not in DBC")
+        raise KeyError(f"CAN ID 0x{can_id:X} not in DBC") # If ID not found, KeyError is raised
 
     measurements = msg.decode(bytearray(data_bytes))
     sources = getattr(msg, "senders", []) or []
@@ -143,11 +144,13 @@ def decode_frame(raw21: bytes):
 
 # -------------------------------- INFLUX --------------------------------
 def make_point(source: str, cls_name: str, ts_seconds: float, measurements: dict) -> Point:
+    # Uses either the parsed time, or the accurate time from Python library
     if USE_NOW_TIME:
         ts_influx = datetime.now(timezone.utc)
     else:
         ts_influx = datetime.fromtimestamp(ts_seconds, tz=timezone.utc)
 
+    # Creates an influx point
     p = Point(source).tag("class", cls_name)
 
     for name, val in measurements.items():
@@ -161,9 +164,8 @@ def make_point(source: str, cls_name: str, ts_seconds: float, measurements: dict
     p.time(ts_influx)
     return p
 
-def write_to_influx(source: str, cls_name: str,
-                    ts_seconds: float, measurements: dict,
-                    counters: dict):
+def write_to_influx(source: str, cls_name: str, ts_seconds: float, measurements: dict, counters: dict):
+    # Makes an influx point based on the given data and writes to influx, raises error if write fails
     try:
         point = make_point(source, cls_name, ts_seconds, measurements)
         write_api.write(bucket=INFLUX_BUCKET, org=INFLUX_ORG, record=point)
@@ -177,7 +179,7 @@ def write_to_influx(source: str, cls_name: str,
             )
 
 # ----------------------------- HEX SPLITTER -----------------------------
-_HEX_OK = set("0123456789abcdefABCDEF")
+_HEX_OK = set("0123456789abcdefABCDEF") # Creates a set of all valid hexadecimal characters
 
 def process_message(message_hex: str, buffer_hex: str = ""):
     """
@@ -190,6 +192,7 @@ def process_message(message_hex: str, buffer_hex: str = ""):
     buffer_hex = parts.pop() if parts else ""
     frames: list[bytes] = []
 
+    # If message doesn't exist, continue
     for part in parts:
         if not part:
             continue
@@ -201,6 +204,7 @@ def process_message(message_hex: str, buffer_hex: str = ""):
             continue
 
         j = 0
+        
         while j <= n - 42:
             seg = part[j:j+42]
             if all(c in _HEX_OK for c in seg):
@@ -227,6 +231,7 @@ counters = {
 _start_time = time.time()
 _last_log  = _start_time
 
+# Shuts the script down and logs the final data
 def _shutdown(*_):
     try:
         logging.info("Shutting down, flushing Influx...")
@@ -242,6 +247,7 @@ def _shutdown(*_):
             elapsed, counters["decoded"] / elapsed
         )
 
+    # Closes all the instances, like write, client and serial
     finally:
         try:
             write_api.close()
@@ -267,7 +273,7 @@ def run():
     buffer_hex = ""
 
     while True:
-        chunk = ser.read(CHUNK_SIZE)
+        chunk = ser.read(CHUNK_SIZE) # Reads from the serial based on the chunk size
 
         if not chunk:
             now = time.time()
