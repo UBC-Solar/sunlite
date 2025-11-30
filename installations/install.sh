@@ -13,8 +13,8 @@ set -e
 #   echo "You must run: sudo tailscale up (manually)"
 # fi
 
-echo "------- Installing InfluxDB2 Server -------"
-./setup_influxdb_server.sh
+# echo "------- Installing InfluxDB2 Server -------"
+# ./setup_influxdb_server.sh
 
 echo "------- Setting up Python virtual environment -------"
 ./setup_python.sh
