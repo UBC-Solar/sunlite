@@ -14,10 +14,10 @@ set -e
 # fi
 
 echo "------- Installing InfluxDB2 Server -------"
-./scripts/setup_influxdb_server.sh
+./setup_influxdb_server.sh
 
 echo "------- Setting up Python virtual environment -------"
-./scripts/setup_python.sh
+./setup_python.sh
 
 # echo "------- Installing systemd service -------"
 # ./scripts/setup_service.sh
