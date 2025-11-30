@@ -4,10 +4,10 @@ After=network-online.target influxdb.service tailscaled.service
 Wants=network-online.target
 
 [Service]
-User=pi
-WorkingDirectory=/home/pi/src
-EnvironmentFile=/home/pi/src/.env
-ExecStart=/home/pi/src/.venv/bin/python /home/pi/src/cell_script.py
+User=sunlite
+WorkingDirectory=/home/sunlite/sunlite/src/influx_cellular
+EnvironmentFile=/home/sunlite/sunlite/.env
+ExecStart=/home/sunlite/sunlite/.venv/bin/python /home/sunlite/sunlite/src/influx_cellular/cell_script.py
 Restart=always
 RestartSec=5
 
