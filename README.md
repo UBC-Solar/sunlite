@@ -56,9 +56,9 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
 
     1. In order to *ssh* into the RPI, the accessing computer must SHARE the same network being used as the RPI. Then, find the RPI's IP address, this is usually within the connectivity/Wi-Fi location on the hotspot, find the IP address. With this use the following command to *ssh* into the RPI:
 
-    ```bash
-    ssh sunlite@<ip-address>
-    ```
+        ```bash
+        ssh sunlite@<ip-address>
+        ```
 
     2. Connect a monitor to the Raspberry Pi using a micro-HDMI cable, and ensure a keyboard is also connected. This allows you to skip the *ssh* step and edit directly to the RPI on the monitor. Follow the following steps until Tailscale is installed, and then *ssh* with Tailscale from a remote computer.
 
