@@ -69,8 +69,13 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     sudo tailscale up
     ```
 
-    After running this command, Tailscale will ask to authenticate, copy and go to the link, login with UBC Solar's admin github account:
-<img width="482" height="82" alt="httpslogin tailscale comabf5b250015f57" src="https://github.com/user-attachments/assets/7ffb08a5-33bf-422d-b300-c21987e163f9" />
+    After running this command, Tailscale will ask to authenticate, copy and go to the link, login with UBC Solar's admin github account. You should see the following command in the RPI's terminal if done correctly:
+
+    ```bash
+    To authenticate:
+
+            https://login.tailscale.com/a/bf5b250015f57
+    ```
 
     Then, check Tailscale status to the RPI, after checking the status, a list of networks on the current Tailscale network will be revealed, check this RPI's Tailscale IP and ensure it is on the network and fully connected.
 
