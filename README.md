@@ -69,6 +69,9 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     sudo tailscale up
     ```
 
+    After running this command, Tailscale will ask to authenticate, copy and go to the link, login with UBC Solar's admin github account:
+<img width="482" height="82" alt="httpslogin tailscale comabf5b250015f57" src="https://github.com/user-attachments/assets/7ffb08a5-33bf-422d-b300-c21987e163f9" />
+
     Then, check Tailscale status to the RPI, after checking the status, a list of networks on the current Tailscale network will be revealed, check this RPI's Tailscale IP and ensure it is on the network and fully connected.
 
     ```bash
@@ -76,7 +79,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     tailscale ip
     ```
 
-6. #### Running the Script Manually or with Service (Optional)
+7. #### Running the Script Manually or with Service (Optional)
 
     On the current variation of sunlite, you can run the script either manually or as a service. Manually running the script requires the user to *ssh* into the RPI each time, while as a service, the script runs on startup whenever the RPI has a solid network connection.
 
@@ -139,7 +142,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     journalctl -u cellular-logger -f
     ```
 
-7. #### Debugging and Testing
+8. #### Debugging and Testing
 
     Inside of the tools/ folder, there are multiple files to help test Sunlite's functionailty. The <can_messages.yaml> file MUST be updated whenever the DBC is updated for testing to be accurate.
 
