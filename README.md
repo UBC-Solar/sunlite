@@ -77,11 +77,17 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
             https://login.tailscale.com/a/bf5b250015f57
     ```
 
-    Then, check Tailscale status to the RPI, after checking the status, a list of networks on the current Tailscale network will be revealed, check this RPI's Tailscale IP and ensure it is on the network and fully connected.
+    Then, check Tailscale status to the RPI, after checking the status, a list of networks on the current Tailscale network will be revealed, check this RPI's Tailscale IP and ensure it is on the network and fully connected. The IP is a string of numbers like 100.117.111.10 for example.
 
     ```bash
     tailscale status
     tailscale ip
+    ```
+
+    After enabling Tailscale, this allows users to access the RPI with Tailscale instead of using other methods of *ssh*. Below is an example of using Tailscale to access the RPI.
+
+    ```bash
+    ssh sunlite@100.117.111.10
     ```
 
 7. #### Running the Script Manually or with Service (Optional)
@@ -104,7 +110,15 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     - tailscaled.service (if installed)
     - influxdb.service
 
-    STOP/DISABLE SERVICE:
+    #### START SERVICE:
+
+    To this service manually and after installation, use this following command:
+
+    ```bash
+    sudo systemctl start cellular-logger
+    ```
+
+    #### STOP/DISABLE SERVICE:
 
     To stop this service temporarily until the next reboot, run the following command:
 
@@ -119,13 +133,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     sudo systemctl disable cellular-logger
     ```
 
-    START/AUTORUN SERVICE:
-
-    To restart this service manually but not at the next reboot, use this following command:
-
-    ```bash
-    sudo systemctl start cellular-logger
-    ```
+    #### AUTORUN SERVICE:
 
     To enable autorun starting every reboot, utilize this command:
 
@@ -133,7 +141,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     sudo systemctl enable cellular-logger
     ```
 
-    DEBUGGING:
+    #### DEBUGGING:
 
     To check the status of the service, use this command:
 
