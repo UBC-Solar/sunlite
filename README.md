@@ -37,6 +37,31 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     cd sunlite
     ```
 
+    To git pull into the RPI, ensure all changes made by the RPI has been committed or stashed.
+
+    ```bash
+    git pull origin <branch-name>
+    ```
+
+    Failure to properly commit or stash results in this error statement being printed, and changes are unabled to be pulled.
+
+    ```bash
+    sunlite@sunlite:~/sunlite $ git pull origin user/tonychen-2006/tailscale_rpi
+    remote: Enumerating objects: 7, done.
+    remote: Counting objects: 100% (7/7), done.
+    remote: Compressing objects: 100% (1/1), done.
+    remote: Total 4 (delta 3), reused 4 (delta 3), pack-reused 0 (from 0)
+    Unpacking objects: 100% (4/4), 357 bytes | 119.00 KiB/s, done.
+    From https://github.com/UBC-Solar/sunlite
+    * branch            user/tonychen-2006/tailscale_rpi -> FETCH_HEAD
+    37f068c..d50caaa  user/tonychen-2006/tailscale_rpi -> origin/user/tonychen-2006/tailscale_rpi
+    Updating 37f068c..d50caaa
+    error: Your local changes to the following files would be overwritten by merge:
+            installations/setup_python.sh
+    Please commit your changes or stash them before you merge.
+    Aborting
+    ```
+
 3. #### Copy Environment Variables
 
     Copy over the example environment and edit it to include your desired endpoints
