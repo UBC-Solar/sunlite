@@ -21,7 +21,7 @@ echo "------- Setting up Python virtual environment -------"
 ./setup_python.sh
 
 echo "------- Installing systemd service -------"
-./scripts/setup_service.sh
+./setup_service.sh
 
 echo "----------------------------------------------------------"
 echo "INSTALL COMPLETE!"
