@@ -9,7 +9,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     Hardware
 
     - Raspberry Pi 4 B
-    - SD Card with Raspberry Pi OS
+    - Micro SD Card with Raspberry Pi OS
     - USB-CAN adapter (e.g. PCAN)
     - LTE/5G Hotspot (e.g. NETGEAR)
     - Internet connection (Ethernet)
@@ -20,6 +20,47 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     - Python 3.10+
     - InfluxDB 2.x Instance (Local or ELEC Computer)
     - Tailscale
+
+2. #### Raspbery Pi Imager
+
+    If the Micro SD card is not installed with the RPI OS (Bookworm), ensure to install it using the [RPI Imager](https://www.raspberrypi.com/software/). After installation, there are four categories that must be chosen.
+
+    1. Device
+        - Choose the Raspberry Model available (likely 4B or 5)
+    2. OS
+        - Choose the Raspberry Pi OS (64-bit)
+    3. Storage
+        - Choose the micro SD card as storage
+    4. Customization
+        - Hostname
+            - Choose sunlite as the hostname
+        - Localization
+            - Choose the country/city, pick Canada
+        - User
+            - Set sunlite as the user again
+            - Set a standard password
+        - Wi-Fi
+            - Enter in the hostname and password of the network being used
+            - Check this on the hotspot being used, with NETGEAR it is on the front page
+        - Remote Access
+            - Ensure to enable to *ssh*, this is a MUST have
+            - Pick the password option
+        - Raspberry Pi Connect
+            - Nice to have but not necessary to setup
+
+    After this, install and write the data to the micro SD card, now it's ready to be used.
+
+3. #### SSH to the RPI
+
+    There are two possible ways to setting up the RPI, one on a monitor and the second using a remote computer.
+
+    1. In order to *ssh* into the RPI, the accessing computer must SHARE the same network being used as the RPI. Then, find the RPI's IP address, this is usually within the connectivity/Wi-Fi location on the hotspot, find the IP address. With this use the following command to *ssh* into the RPI:
+
+    ```bash
+    ssh sunlite@<ip-address>
+    ```
+
+    2. Connect a monitor to the Raspberry Pi using a micro-HDMI cable, and ensure a keyboard is also connected. This allows you to skip the *ssh* step and edit directly to the RPI on the monitor. Follow the following steps until Tailscale is installed, and then *ssh* with Tailscale from a remote computer.
 
 2. #### Clone Repository on RPI
 
@@ -64,7 +105,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
 
 3. #### Copy Environment Variables
 
-    Copy over the example environment and edit it to include your desired endpoints
+    Copy over the example environment and edit it to include the desired endpoints.
 
     ```bash
     cp .env.example .env
@@ -72,7 +113,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     ```
 
     ```bash
-    INFLUX_URL="http://<influx-ip>:8086"
+    INFLUX_URL="http://<tailscale-endpoint-ip>"
     INFLUX_ORG="UBC Solar"
     INFLUX_BUCKET="<replace_with_real_bucket>"
     INFLUX_TOKEN="<replace_with_real_token>"
