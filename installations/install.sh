@@ -9,19 +9,19 @@ done
 # sudo apt-get update
 # sudo apt-get install -y python3 python3-venv python3-pip git curl gpg
 
-# echo "------- Installing Tailscale -------"
-# if ! command -v tailscale >/dev/null 2>&1; then
-#   curl -fsSL https://tailscale.com/install.sh | sh
-#   sudo systemctl enable tailscaled
-#   sudo systemctl start tailscaled
-#   echo "You must run: sudo tailscale up (manually)"
-# fi
-
 echo "------- Setting up Python virtual environment -------"
 ./setup_python.sh
 
 echo "------- Installing systemd service -------"
 ./setup_service.sh
+
+echo "------- Installing Tailscale -------"
+if ! command -v tailscale >/dev/null 2>&1; then
+  curl -fsSL https://tailscale.com/install.sh | sh
+  sudo systemctl enable tailscaled
+  sudo systemctl start tailscaled
+  echo "You must run: sudo tailscale up (manually)"
+fi
 
 echo "----------------------------------------------------------"
 echo "INSTALL COMPLETE!"
