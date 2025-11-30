@@ -62,7 +62,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
 
     2. Connect a monitor to the Raspberry Pi using a micro-HDMI cable, and ensure a keyboard is also connected. This allows you to skip the *ssh* step and edit directly to the RPI on the monitor. Follow the following steps until Tailscale is installed, and then *ssh* with Tailscale from a remote computer.
 
-2. #### Clone Repository on RPI
+4. #### Clone Repository on RPI
 
     To clone the main (production) repository of Sunlite use this command:
 
@@ -103,7 +103,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     Aborting
     ```
 
-3. #### Copy Environment Variables
+5. #### Copy Environment Variables
 
     Copy over the example environment and edit it to include the desired endpoints.
 
@@ -119,7 +119,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     INFLUX_TOKEN="<replace_with_real_token>"
     ```
 
-4. #### Run Installation Scripts
+6. #### Run Installation Scripts
 
     Everything needed for the Pi (Python venv, dependencies, permissions, systemd files) is automated. 
 
@@ -136,7 +136,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     sudo bash install.sh
     ```
 
-5. #### Ensure Tailscale is Running
+7. #### Ensure Tailscale is Running
 
     First enable tailscale by running this command and setting tailscale up.
 
@@ -165,7 +165,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     ssh sunlite@100.117.111.10
     ```
 
-7. #### Running the Script Manually or with Service (Optional)
+8. #### Running the Script Manually or with Service (Optional)
 
     On the current variation of sunlite, you can run the script either manually or as a service. Manually running the script requires the user to *ssh* into the RPI each time, while as a service, the script runs on startup whenever the RPI has a solid network connection.
 
@@ -230,7 +230,22 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     journalctl -u cellular-logger -f
     ```
 
-8. #### Debugging and Testing
+    Checking the status and log using the following commands will give this result:
+
+    ```bash
+    Nov 29 20:27:30 sunlite python[4294]: 2025-11-29 20:27:30,396 [WARNING] Retrying (WritesRetry(total=1, connect=None, read=...
+    Nov 29 20:27:40 sunlite python[4294]: 2025-11-29 20:27:40,409 [WARNING] The retriable error occurred during request. Reas...
+    Nov 29 20:27:59 sunlite systemd[1]: cellular-logger.service: State 'stop-sigterm' timed out. Killing.
+    Nov 29 20:27:59 sunlite systemd[1]: cellular-logger.service: Killing process 4294 (python) with signal SIGKILL.
+    Nov 29 20:27:59 sunlite systemd[1]: cellular-logger.service: Killing process 4295 (python) with signal SIGKILL.
+    Nov 29 20:27:59 sunlite systemd[1]: cellular-logger.service: Killing process 4299 (python) with signal SIGKILL.
+    Nov 29 20:27:59 sunlite systemd[1]: cellular-logger.service: Main process exited, code=killed, status=9/KILL
+    Nov 29 20:27:59 sunlite systemd[1]: cellular-logger.service: Failed with result 'timeout'.
+    Nov 29 20:27:59 sunlite systemd[1]: Stopped cellular-logger.service – Cellular CAN Logger.
+    Nov 29 20:27:59 sunlite systemd[1]: cellular-logger.service: Consumed 1.644s CPU time.
+    ```
+
+9. #### Debugging and Testing
 
     Inside of the tools/ folder, there are multiple files to help test Sunlite's functionailty. The <can_messages.yaml> file MUST be updated whenever the DBC is updated for testing to be accurate.
 
