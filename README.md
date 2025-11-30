@@ -162,7 +162,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     After enabling Tailscale, this allows users to access the RPI with Tailscale instead of using other methods of *ssh*. Below is an example of using Tailscale to access the RPI.
 
     ```bash
-    ssh sunlite@100.117.111.10
+    ssh sunlite@<tailscale-ip-address>
     ```
 
 8. #### Running the Script Manually or with Service (Optional)
