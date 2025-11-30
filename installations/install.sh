@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 set -e
 
-echo "------- Updating system -------"
-sudo apt-get update
-sudo apt-get install -y python3 python3-venv python3-pip git curl gpg
+# echo "------- Updating system -------"
+# sudo apt-get update
+# sudo apt-get install -y python3 python3-venv python3-pip git curl gpg
 
-echo "------- Installing Tailscale -------"
-if ! command -v tailscale >/dev/null 2>&1; then
-  curl -fsSL https://tailscale.com/install.sh | sh
-  sudo systemctl enable tailscaled
-  sudo systemctl start tailscaled
-  echo "You must run: sudo tailscale up (manually)"
-fi
+# echo "------- Installing Tailscale -------"
+# if ! command -v tailscale >/dev/null 2>&1; then
+#   curl -fsSL https://tailscale.com/install.sh | sh
+#   sudo systemctl enable tailscaled
+#   sudo systemctl start tailscaled
+#   echo "You must run: sudo tailscale up (manually)"
+# fi
 
 echo "------- Installing InfluxDB2 Server -------"
 ./scripts/setup_influxdb_server.sh
