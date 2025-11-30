@@ -187,7 +187,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
 
     #### START SERVICE:
 
-    To this service manually and after installation, use this following command:
+    To start this service manually and after installation, use this following command:
 
     ```bash
     sudo systemctl start cellular-logger
