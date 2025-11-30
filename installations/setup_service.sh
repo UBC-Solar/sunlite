@@ -1,5 +1,7 @@
 echo "------- Installing systemd service (cellular-logger) -------"
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 SERVICE_SRC="installations/cellular-logger.service"
 SERVICE_DST="/etc/systemd/system/cellular-logger.service"
 
