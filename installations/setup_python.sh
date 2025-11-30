@@ -9,4 +9,4 @@ python3 -m venv .venv
 source .venv/bin/activate
 
 pip install --upgrade pip
-pip install python-dotenv influxdb-client
+pip install python-dotenv influxdb-client pyserial cantools
