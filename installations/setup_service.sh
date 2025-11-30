@@ -1,32 +1,26 @@
-echo "------- Installing systemd service (cellular-logger) -------"
+#!/usr/bin/env bash
+set -e
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Absolute paths
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+INSTALL_DIR="${PROJECT_ROOT}/installations"
 
-SERVICE_SRC="installations/cellular-logger.service"
+SERVICE_SRC="${INSTALL_DIR}/cellular-logger.service"
 SERVICE_DST="/etc/systemd/system/cellular-logger.service"
 
-# 1. Verify the service file exists
+echo "------- Installing systemd service (cellular-logger) -------"
+
 if [ ! -f "$SERVICE_SRC" ]; then
-    echo "ERROR: $SERVICE_SRC not found. Cannot install service."
-    exit 1
+  echo "ERROR: ${SERVICE_SRC} not found. Cannot install service."
+  exit 1
 fi
 
-# 2. Copy into systemd directory
-echo "Copying service file to $SERVICE_DST ..."
+echo "Copying service file to ${SERVICE_DST}..."
 sudo cp "$SERVICE_SRC" "$SERVICE_DST"
 
-# 3. Reload systemd daemon
-echo "Reloading systemd daemon..."
+echo "Reloading systemd and enabling service..."
 sudo systemctl daemon-reload
+sudo systemctl enable cellular-logger.service
+sudo systemctl restart cellular-logger.service
 
-# 4. Enable service at boot
-echo "Enabling cellular-logger service..."
-sudo systemctl enable cellular-logger
-
-# 5. Start or restart service immediately
-echo "Starting cellular-logger service..."
-sudo systemctl restart cellular-logger
-
-# 6. Status message
-echo "cellular-logger service installed, enabled, and running."
-echo "View logs using: sudo journalctl -u cellular-logger -f"
+echo "Systemd service installed and started."
