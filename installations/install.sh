@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -e
 
+for f in "$(dirname "$0")"/*.sh; do
+    chmod +x "$f" 2>/dev/null || true
+done
+
 # echo "------- Updating system -------"
 # sudo apt-get update
 # sudo apt-get install -y python3 python3-venv python3-pip git curl gpg
