@@ -23,8 +23,17 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
 
 2. #### Clone Repository on RPI
 
+    To clone the main (production) repository of Sunlite use this command:
+
     ```bash
     git clone https://github.com/UBC-Solar/sunlite.git 
+    cd sunlite
+    ```
+
+    When doing testing on a RPI, branches can be cloned as well:
+
+    ```bash
+    git clone --branch <branch-name> https://github.com/UBC-Solar/sunlite.git 
     cd sunlite
     ```
 
