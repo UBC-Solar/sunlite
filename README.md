@@ -1,6 +1,6 @@
 # Sunlite RPi gRPC Cellular Client
 
-This repository contains the **Raspberry Pi client** for Sunlite's cellular telemetry pipeline.
+This repository contains the **Raspberry Pi client** for Sunlink's cellular telemetry pipeline.
 
 The Pi reads 24-byte CAN frames from the TEL board via UART, converts them to protobuf messages, batches them, and streams them over gRPC to the `cellular_parser` on the bay computer.
 
@@ -11,11 +11,10 @@ The Pi reads 24-byte CAN frames from the TEL board via UART, converts them to pr
 
 ## Architecture
 ```
-┌─────────────┐        UART         ┌──────────────────────────┐
+┌─────────────┐        UART          ┌──────────────────────────┐
 │  TEL Board  │ ───────────────────> │  Raspberry Pi (sunlite)  │
-│             │   (24-byte frames)   │  100.117.111.10          │
-└─────────────┘                      │                          │
-                                     │  rpi_cellular.py         │
+│             │   (24-byte frames)   │                          │
+└─────────────┘                      │  rpi_cellular.py         │
                                      │  - Read UART             │
                                      │  - Convert to protobuf   │
                                      │  - Batch                 │
@@ -44,7 +43,7 @@ sunlite/
 ├── test_send.py            # Debug: send test frame to server
 ├── .env                    # Runtime configuration
 ├── .env.example            # Example configuration
-├── requirements.txt        # Python dependencies
+├── requirements.txt        # Python dependencies (includes gRCP dependencies)
 └── tools/
     └── proto/
         ├── canlink.proto
@@ -56,14 +55,14 @@ sunlite/
 ## Prerequisites
 
 ### Hardware
-- Raspberry Pi 4B with Raspberry Pi OS (64-bit, Bookworm)
+- Raspberry Pi 4B with Raspberry Pi OS (64-bit, Bookworm) with an SD card
 - USB-UART adapter (e.g., FTDI C232HM-DDHSL-0)
-- LTE/5G cellular hotspot
+- LTE/5G cellular hotspot + SIM Card
 - TEL board connected via UART
 
 ### Software
 - Python 3.10+
-- Network connectivity to bay computer (`100.120.214.69:50051`)
+- Network connectivity to bay computer (`100.120.214.69:50051`) 
 - `cellular_parser` Docker container running on bay computer
 
 
@@ -110,14 +109,6 @@ BATCH_MAX_MS=50
 GRPC_COMP=gzip
 ```
 
-### 5. Set UART Permissions
-```bash
-sudo usermod -aG dialout sunlite
-```
-
-Log out and back in for changes to take effect.
-
-
 ## Configuration Variables
 
 | Variable | Description | Default | Notes |
@@ -135,7 +126,6 @@ Log out and back in for changes to take effect.
 ### Step 1: Start Bay Computer Parser (Required)
 ```bash
 ssh electrical@100.120.214.69
-# password: elec2024
 
 cd /home/electrical/sunlink
 source environment/bin/activate
@@ -147,9 +137,8 @@ docker compose up -d
 ### Step 2: Start RPi Client
 ```bash
 ssh sunlite@100.117.111.10
-# password: solarisbest123
 
-cd /home/tonychen/Mridul_gRPC
+cd /home/sunlite/sunlite/
 source .venv/bin/activate
 
 set -a
@@ -191,7 +180,7 @@ Expected output:
 
 ### Check UART Data
 ```bash
-cd /home/tonychen/Mridul_gRPC
+cd /home/sunlite/sunlite
 source .venv/bin/activate
 ./serial_input.py
 ```
@@ -224,7 +213,6 @@ Ack frames: 1
 **No data received:**
 - Check TEL board power and connection
 - Verify `TEL_UART_PORT` is correct
-- Confirm user is in `dialout` group
 
 **gRPC connection failed:**
 - Verify network connectivity via cellular hotspot
@@ -288,8 +276,5 @@ docker compose ps
 
 ## Additional Information
 
-- **Server-side parsing:** See sunlink repository for `cellular_parser` documentation
 - **CAN parsing and InfluxDB:** Handled entirely on bay computer, not on Pi
 - **Protobuf regeneration:** `python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. canlink.proto`
-
-For questions, contact UBC Solar electrical team.
