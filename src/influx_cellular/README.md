@@ -125,14 +125,12 @@ Nov 29 20:27:40 sunlite python[4294]: 2025-11-29 20:27:40,409 [WARNING] The retr
 
 Edit these constants in `cell_script.py` if needed:
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `SERIAL_PORT` | `/dev/ttyUSB0` | Serial port for USB-CAN adapter |
-| `BAUDRATE` | `230400` | Serial baud rate |
-| `DBC_FILE` | `../../dbc/brightside.dbc` | Path to CAN database file |
-| `INF_BATCH_SIZE` | `50` | Points per batch write |
-| `INF_FLUSH_INTERVAL_S` | `10.0` | Seconds between forced flushes |
-| `USE_NOW_TIME` | `True` | Use system time vs CAN timestamp |
+- **SERIAL_PORT:** `/dev/ttyUSB0` — Serial port for USB-CAN adapter
+- **BAUDRATE:** `230400` — Serial baud rate
+- **DBC_FILE:** `../../dbc/brightside.dbc` — Path to CAN database file
+- **INF_BATCH_SIZE:** `50` — Points per batch write
+- **INF_FLUSH_INTERVAL_S:** `10.0` — Seconds between forced flushes
+- **USE_NOW_TIME:** `True` — Use system time vs CAN timestamp
 
 ---
 
@@ -203,7 +201,7 @@ Environment variables and constants control the script behavior:
         - True → timestamps use current system time
         - False → timestamps use the embedded CAN timestamp from the frame
 
-3. #### Setup: Serial, DBC, Influx Client
+1. #### Setup: Serial, DBC, Influx Client
 
     #### Serial Port
 
