@@ -134,17 +134,6 @@ Edit these constants in `cell_script.py` if needed:
 | `INF_FLUSH_INTERVAL_S` | `10.0` | Seconds between forced flushes |
 | `USE_NOW_TIME` | `True` | Use system time vs CAN timestamp |
 
-### Serial Device Permissions
-
-If you get a "Permission denied" error on `/dev/ttyUSB0`:
-
-```bash
-# Add your user to the dialout group
-sudo usermod -a -G dialout $USER
-
-# Then log out and back in, or reboot
-```
-
 ---
 
 ## Understanding the Output
@@ -190,30 +179,6 @@ The script performs the following pipeline:
 4. **Decode with DBC** → Uses `cantools` to decode payload into named signals
 5. **Create InfluxDB Point** → Converts to time-series format with tags and fields
 6. **Batch Write** → Buffers 50 points or 10 seconds, then writes to InfluxDB
-
-```
-
-### InfluxDB Data Model
-
-**Measurement:** CAN module name (e.g., `BMS_Controller`, `Motor_Controller`)  
-**Tag:** `class` = DBC message name  
-**Fields:** All decoded signals (numeric values only)  
-**Timestamp:** System time or embedded CAN timestamp
-
----
-
-## Technical Implementation
-
-This section provides detailed information about the script's internal architecture for developers who need to modify or extend the code.
-
-### Dependencies
-
-```python
-from influxdb_client import InfluxDBClient, Point, WriteOptions
-from dotenv import load_dotenv
-from datetime import datetime, timezone
-import sys, time, signal, struct, logging, serial, cantools, os
-```
 
 **Key Libraries:**
 - `serial` - Communicates with the USB-CAN adapter
