@@ -121,18 +121,19 @@ Nov 29 20:27:40 sunlite python[4294]: 2025-11-29 20:27:40,409 [WARNING] The retr
 
 ## Configuration
 
-### Script Parameters
+Environment variables and constants control the script behavior:
 
-Edit these constants in `cell_script.py` if needed:
+- InfluxDB config is read from environment variables:
+    - `INFLUX_URL`, `INFLUX_ORG`, `INFLUX_BUCKET`, `INFLUX_TOKEN`
+- `SERIAL_PORT` and `BAUDRATE` define how to talk to the CAN adapter.
+- `FRAME_LEN = 21` → each complete CAN record is 21 bytes.
+- `CHUNK_SIZE` controls how many bytes are read from serial in one go.
+- `DBC_FILE` is the path to the DBC used for decoding.
+- `INF_BATCH_SIZE` & `INF_FLUSH_INTERVAL_S` control Influx batch writing.
 
-- `SERIAL_PORT`: `/dev/ttyUSB0` — Serial port for USB-CAN adapter
-- `BAUDRATE`: `230400` — Serial baud rate
-- `DBC_FILE`: `../../dbc/brightside.dbc` — Path to CAN database file
-- `FRAME_LEN`: `21` — Each complete CAN record is 21 bytes
-- `CHUNK_SIZE`: `<bytes>` — Number of bytes read from serial per iteration
-- `INF_BATCH_SIZE`: `50` — Points per batch write
-- `INF_FLUSH_INTERVAL_S`: `10.0` — Seconds between forced flushes
-- `USE_NOW_TIME`: `True` — Use system time vs CAN timestamp
+- `USE_NOW_TIME`:
+    - `True` → timestamps use current system time
+    - `False` → timestamps use the embedded CAN timestamp from the frame
 
 ---
 
