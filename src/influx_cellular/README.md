@@ -1,29 +1,157 @@
-### Cellular Python Script Explanation
+### Cellular CAN Logger
 
-This document explains the full functionality of the CAN script.
+This script ingests CAN bus data from a USB-CAN adapter, decodes it using a DBC file, and streams it to InfluxDB for real-time telemetry monitoring.
 
-The script does the following:
+---
 
-- Reads raw CAN/log frames from a serial device (/dev/ttyUSB0)
-- Extracts 21-byte frames that contain:
-    -  a timestamp
-    - CAN ID
-    - CAN payload
-    - Decodes those frames using a DBC file
-    - Converts decoded signals into InfluxDB points
-    - Writes them in batches to an InfluxDB 2.x bucket
-    - Tracks stats (frames seen, decoded, written, errors) and logs them periodically
+## Quick Start
 
-To manually run this script the user must enter the virtual environment on the RPI and directly run it from there.
+### Prerequisites
+
+Before running this script, ensure the following are set up:
+
+1. **Hardware Connected:**
+   - USB-CAN adapter plugged into the Raspberry Pi (typically at `/dev/ttyUSB0`)
+   - CAN bus connected to the adapter
+
+2. **Environment Variables:**
+   - Create a `.env` file in the project root with:
+     ```bash
+     INFLUX_URL="http://<tailscale-endpoint-ip>:8086"
+     INFLUX_ORG="UBC Solar"
+     INFLUX_BUCKET="<your_bucket_name>"
+     INFLUX_TOKEN="<your_influx_token>"
+     ```
+
+3. **Dependencies Installed:**
+   - Run the installation script from the main README (Step 7)
+
+### Running Manually
+
+To test the script or debug issues, run it manually:
 
 ```bash
+# From the project root
 source .venv/bin/activate
-
 cd src/influx_cellular
 python3 cell_script.py
 ```
 
-The description below is a full part by part explanation on how each component within the script works to extract data sent from UART to the RPI, and then relayed to an influxDB server.
+**Expected Output:**
+```
+INFO: CAN ingest loop started.
+INFO: Stats: frames_seen=1234 decoded=1200 written=1200 decode_err=20 write_err=0 unknown_ids=14 avg_decoded/s=120.0
+```
+
+Press `Ctrl+C` to stop cleanly - the script will flush remaining data to InfluxDB.
+
+### Running as a Service
+
+The script is configured to run automatically via systemd (see main README Step 9).
+
+**Service Commands:**
+```bash
+# Start the service
+sudo systemctl start cellular-logger
+
+# Check status
+sudo systemctl status cellular-logger
+
+# View live logs
+journalctl -u cellular-logger -f
+
+# Stop the service
+sudo systemctl stop cellular-logger
+```
+
+---
+
+## Configuration
+
+### Script Parameters
+
+Edit these constants in `cell_script.py` if needed:
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `SERIAL_PORT` | `/dev/ttyUSB0` | Serial port for USB-CAN adapter |
+| `BAUDRATE` | `230400` | Serial baud rate |
+| `DBC_FILE` | `../../dbc/brightside.dbc` | Path to CAN database file |
+| `INF_BATCH_SIZE` | `50` | Points per batch write |
+| `INF_FLUSH_INTERVAL_S` | `10.0` | Seconds between forced flushes |
+| `USE_NOW_TIME` | `True` | Use system time vs CAN timestamp |
+
+### Serial Device Permissions
+
+If you get a "Permission denied" error on `/dev/ttyUSB0`:
+
+```bash
+# Add your user to the dialout group
+sudo usermod -a -G dialout $USER
+
+# Then log out and back in, or reboot
+```
+
+---
+
+## Understanding the Output
+
+### Statistics Logged Every Second
+
+```
+frames_seen=1234    # Total 21-byte frames received from serial
+decoded=1200        # Successfully decoded with DBC
+written=1200        # Points written to InfluxDB
+decode_err=20       # Frames that failed to decode
+write_err=0         # Failed InfluxDB writes
+unknown_ids=14      # CAN IDs not in the DBC file
+avg_decoded/s=120.0 # Ingest rate (frames per second)
+```
+
+### Common Issues
+
+**No Data Appearing:**
+- Check USB-CAN adapter is connected: `ls /dev/ttyUSB*`
+- Verify CAN bus has traffic
+- Check InfluxDB connection with `ping <INFLUX_URL>`
+
+**High `decode_errors`:**
+- DBC file may be outdated
+- Wrong frame layout (script auto-detects both formats)
+- Serial baud rate mismatch
+
+**High `write_errors`:**
+- InfluxDB server unreachable
+- Invalid token or bucket name
+- Network connectivity issues
+
+---
+
+## How It Works
+
+The script performs the following pipeline:
+
+1. **Read Serial Data** → Reads chunks from `/dev/ttyUSB0` at 230400 baud
+2. **Extract Frames** → Hex-decodes and splits on `\r\n`, extracts 21-byte frames
+3. **Parse Frame** → Splits into timestamp (8B), CAN ID (4B), payload (8B)
+4. **Decode with DBC** → Uses `cantools` to decode payload into named signals
+5. **Create InfluxDB Point** → Converts to time-series format with tags and fields
+6. **Batch Write** → Buffers 50 points or 10 seconds, then writes to InfluxDB
+
+```
+
+### InfluxDB Data Model
+
+**Measurement:** CAN module name (e.g., `BMS_Controller`, `Motor_Controller`)  
+**Tag:** `class` = DBC message name  
+**Fields:** All decoded signals (numeric values only)  
+**Timestamp:** System time or embedded CAN timestamp
+
+---
+
+## Technical Implementation Details
+
+Below is a detailed explanation of the script's internal architecture for developers who need to modify or debug the code.
 
 1. #### Imports and Dependencies
 
