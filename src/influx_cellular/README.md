@@ -47,21 +47,71 @@ Press `Ctrl+C` to stop cleanly - the script will flush remaining data to InfluxD
 
 ### Running as a Service
 
-The script is configured to run automatically via systemd (see main README Step 9).
+The script is automatically configured to run as a systemd service after running the installation script. The service runs on startup whenever the RPI has a solid network connection.
 
-**Service Commands:**
+**Service Dependencies:**
+
+The service only activates when all 3 requirements are up:
+- `network-online.target` - Network interfaces fully up
+- `tailscaled.service` - Tailscale VPN connection (if installed)
+- `influxdb.service` - InfluxDB service
+
+**Service Management Commands:**
+
+**Start the service:**
 ```bash
-# Start the service
 sudo systemctl start cellular-logger
+```
 
-# Check status
-sudo systemctl status cellular-logger
-
-# View live logs
-journalctl -u cellular-logger -f
-
-# Stop the service
+**Stop the service temporarily (until next reboot):**
+```bash
 sudo systemctl stop cellular-logger
+```
+
+**Disable the service permanently:**
+```bash
+sudo systemctl stop cellular-logger
+sudo systemctl disable cellular-logger
+```
+
+**Enable autorun on every reboot:**
+```bash
+sudo systemctl enable cellular-logger
+```
+
+**Check service status:**
+```bash
+sudo systemctl status cellular-logger
+```
+
+**View live logs:**
+```bash
+journalctl -u cellular-logger -f
+```
+
+**Example Log Output:**
+```
+Nov 29 20:27:30 sunlite python[4294]: 2025-11-29 20:27:30,396 [WARNING] Retrying (WritesRetry(total=1, connect=None, read=...
+Nov 29 20:27:40 sunlite python[4294]: 2025-11-29 20:27:40,409 [WARNING] The retriable error occurred during request. Reas...
+```
+
+---
+
+## Environment Variables
+
+Copy and configure the environment file with your InfluxDB connection details:
+
+```bash
+cp .env.example .env
+nano .env
+```
+
+**Required Variables:**
+```bash
+INFLUX_URL="http://<tailscale-endpoint-ip>:8086"
+INFLUX_ORG="UBC Solar"
+INFLUX_BUCKET="<replace_with_real_bucket>"
+INFLUX_TOKEN="<replace_with_real_token>"
 ```
 
 ---

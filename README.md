@@ -103,23 +103,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     Aborting
     ```
 
-5. #### Copy Environment Variables
-
-    Copy over the example environment and edit it to include the desired endpoints.
-
-    ```bash
-    cp .env.example .env
-    nano .env
-    ```
-
-    ```bash
-    INFLUX_URL="http://<tailscale-endpoint-ip>"
-    INFLUX_ORG="UBC Solar"
-    INFLUX_BUCKET="<replace_with_real_bucket>"
-    INFLUX_TOKEN="<replace_with_real_token>"
-    ```
-
-6. #### Run Installation Scripts
+5. #### Run Installation Scripts
 
     Everything needed for the Pi (Python venv, dependencies, permissions, systemd files) is automated. 
 
@@ -136,7 +120,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     sudo bash install.sh
     ```
 
-7. #### Ensure Tailscale is Running
+6. #### Ensure Tailscale is Running
 
     First enable tailscale by running this command and setting tailscale up.
 
@@ -165,87 +149,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     ssh sunlite@<tailscale-ip-address>
     ```
 
-8. #### Running the Script Manually or with Service (Optional)
-
-    On the current variation of sunlite, you can run the script either manually or as a service. Manually running the script requires the user to *ssh* into the RPI each time, while as a service, the script runs on startup whenever the RPI has a solid network connection.
-
-    To manually run the script the user must enter the virtual environment and directly run it from there.
-
-    ```bash
-    source .venv/bin/activate
-
-    cd src/influx_cellular
-    python3 cell_script.py
-    ```
-
-    To run the script as a service, the user must use the systemd service file provided in <installations/cellular-logger.service>. This is activated when the user ran *install.sh*. 
-
-    The service only activates when all 3 requirements are up, otherwise it won't run:
-    - network-online.target (interfaces fully up)
-    - tailscaled.service (if installed)
-    - influxdb.service
-
-    #### START SERVICE:
-
-    To start this service manually and after installation, use this following command:
-
-    ```bash
-    sudo systemctl start cellular-logger
-    ```
-
-    #### STOP/DISABLE SERVICE:
-
-    To stop this service temporarily until the next reboot, run the following command:
-
-    ```bash
-    sudo systemctl stop cellular-logger
-    ```
-
-    To disable this service and follows through even with reboots, run:
-
-    ```bash
-    sudo systemctl stop cellular-logger
-    sudo systemctl disable cellular-logger
-    ```
-
-    #### AUTORUN SERVICE:
-
-    To enable autorun starting every reboot, utilize this command:
-
-    ```bash
-    sudo systemctl enable cellular-logger
-    ```
-
-    #### DEBUGGING:
-
-    To check the status of the service, use this command:
-
-    ```bash
-    sudo systemctl status cellular-logger
-    ```
-
-    To view all the logs, use this command:
-
-    ```bash
-    journalctl -u cellular-logger -f
-    ```
-
-    Checking the status and log using the following commands will give this result:
-
-    ```bash
-    Nov 29 20:27:30 sunlite python[4294]: 2025-11-29 20:27:30,396 [WARNING] Retrying (WritesRetry(total=1, connect=None, read=...
-    Nov 29 20:27:40 sunlite python[4294]: 2025-11-29 20:27:40,409 [WARNING] The retriable error occurred during request. Reas...
-    Nov 29 20:27:59 sunlite systemd[1]: cellular-logger.service: State 'stop-sigterm' timed out. Killing.
-    Nov 29 20:27:59 sunlite systemd[1]: cellular-logger.service: Killing process 4294 (python) with signal SIGKILL.
-    Nov 29 20:27:59 sunlite systemd[1]: cellular-logger.service: Killing process 4295 (python) with signal SIGKILL.
-    Nov 29 20:27:59 sunlite systemd[1]: cellular-logger.service: Killing process 4299 (python) with signal SIGKILL.
-    Nov 29 20:27:59 sunlite systemd[1]: cellular-logger.service: Main process exited, code=killed, status=9/KILL
-    Nov 29 20:27:59 sunlite systemd[1]: cellular-logger.service: Failed with result 'timeout'.
-    Nov 29 20:27:59 sunlite systemd[1]: Stopped cellular-logger.service – Cellular CAN Logger.
-    Nov 29 20:27:59 sunlite systemd[1]: cellular-logger.service: Consumed 1.644s CPU time.
-    ```
-
-9. #### Debugging and Testing
+7. #### Debugging and Testing
 
     Inside of the tools/ folder, there are multiple files to help test Sunlite's functionailty. The <can_messages.yaml> file MUST be updated whenever the DBC is updated for testing to be accurate.
 
