@@ -14,17 +14,39 @@ Before running this script, ensure the following are set up:
    - USB-CAN adapter plugged into the Raspberry Pi (typically at `/dev/ttyUSB0`)
    - CAN bus connected to the adapter
 
-2. **Environment Variables:**
-   - Create a `.env` file in the project root with:
-     ```bash
-     INFLUX_URL="http://<tailscale-endpoint-ip>:8086"
-     INFLUX_ORG="UBC Solar"
-     INFLUX_BUCKET="<your_bucket_name>"
-     INFLUX_TOKEN="<your_influx_token>"
-     ```
+2. **Dependencies Installed:**
+   
+   Run the installation script to set up everything needed for the Pi (Python venv, dependencies, permissions, systemd files):
+   
+   ```bash
+   cd installations
+   sudo bash install.sh
+   ```
+   
+   This automatically:
+   - Installs Python & system packages
+   - Creates a virtual environment
+   - Installs all Python dependencies
+   - Sets up InfluxDB CLI
+   - Configures Tailscale
+   - Prepares the cellular logging services
 
-3. **Dependencies Installed:**
-   - Run the installation script from the main README (Step 7)
+3. **Environment Variables:**
+   
+   Copy and configure the environment file with your InfluxDB connection details:
+   
+   ```bash
+   cp .env.example .env
+   nano .env
+   ```
+   
+   **Required Variables:**
+   ```bash
+   INFLUX_URL="http://<tailscale-endpoint-ip>:8086"
+   INFLUX_ORG="UBC Solar"
+   INFLUX_BUCKET="<replace_with_real_bucket>"
+   INFLUX_TOKEN="<replace_with_real_token>"
+   ```
 
 ### Running Manually
 
@@ -93,25 +115,6 @@ journalctl -u cellular-logger -f
 ```
 Nov 29 20:27:30 sunlite python[4294]: 2025-11-29 20:27:30,396 [WARNING] Retrying (WritesRetry(total=1, connect=None, read=...
 Nov 29 20:27:40 sunlite python[4294]: 2025-11-29 20:27:40,409 [WARNING] The retriable error occurred during request. Reas...
-```
-
----
-
-## Environment Variables
-
-Copy and configure the environment file with your InfluxDB connection details:
-
-```bash
-cp .env.example .env
-nano .env
-```
-
-**Required Variables:**
-```bash
-INFLUX_URL="http://<tailscale-endpoint-ip>:8086"
-INFLUX_ORG="UBC Solar"
-INFLUX_BUCKET="<replace_with_real_bucket>"
-INFLUX_TOKEN="<replace_with_real_token>"
 ```
 
 ---
