@@ -149,28 +149,29 @@ The script performs the following pipeline:
 
 ---
 
-## Technical Implementation Details
+## Technical Implementation
 
-Below is a detailed explanation of the script's internal architecture for developers who need to modify or debug the code.
+This section provides detailed information about the script's internal architecture for developers who need to modify or extend the code.
 
-1. #### Imports and Dependencies
+### Dependencies
 
-    ```bash
-    from influxdb_client import InfluxDBClient, Point, WriteOptions
-    from dotenv import load_dotenv
-    from datetime import datetime, timezone
-    import sys, time, signal, struct, logging, serial, cantools, os
-    ```
+```python
+from influxdb_client import InfluxDBClient, Point, WriteOptions
+from dotenv import load_dotenv
+from datetime import datetime, timezone
+import sys, time, signal, struct, logging, serial, cantools, os
+```
 
-    Key Libraries:
+**Key Libraries:**
+- `serial` - Communicates with the USB-CAN adapter
+- `cantools` - Loads DBC files and decodes CAN payloads
+- `influxdb_client` - Writes time-series data to InfluxDB
+- `dotenv` - Loads environment variables from `.env`
+- `logging` - Structured logging to stdout (systemd journal)
 
-    - serial          : talks to the USB-CAN / serial device
-    - cantools        : loads the DBC and decodes CAN payloads
-    - influxdb_client : writes time-series data to InfluxDB
-    - dotenv          : loads environment variables from .env
-    - logging         : structured logging to stdout (and systemd/journal)
+### Configuration
 
-2. #### Configuration and Environment
+Environment variables and constants control the script behavior:
 
     - InfluxDB config is read from environment variables:
         - INFLUX_URL, INFLUX_ORG, INFLUX_BUCKET, INFLUX_TOKEN
