@@ -1,0 +1,5 @@
+# Ignores environment files
+.env
+
+# Ignores all CSV files
+*.csv
