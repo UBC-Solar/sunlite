@@ -1,0 +1,15 @@
+[Unit]
+Description=Cellular CAN Logger
+After=network-online.target influxdb.service tailscaled.service
+Wants=network-online.target
+
+[Service]
+User=sunlite
+WorkingDirectory=/home/sunlite/sunlite/src/influx_cellular
+EnvironmentFile=/home/sunlite/sunlite/.env
+ExecStart=/home/sunlite/sunlite/.venv/bin/python /home/sunlite/sunlite/src/influx_cellular/cell_script.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
