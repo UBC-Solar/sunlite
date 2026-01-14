@@ -6,10 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # import generated stubs (you can copy tools/proto/ into the Pi or pip-install from your repo)
-try:
-    from tools.proto import canlink_pb2, canlink_pb2_grpc
-except ModuleNotFoundError:
-    import canlink_pb2, canlink_pb2_grpc
+from tools.proto import canlink_pb2, canlink_pb2_grpc
 
 # CONFIG
 UART_PORT        = os.getenv("TEL_UART_PORT", "COM5" if sys.platform.startswith("win") else "/dev/ttyUSB0")

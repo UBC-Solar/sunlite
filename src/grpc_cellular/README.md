@@ -26,7 +26,7 @@ The Pi reads 24-byte CAN frames from the TEL board via UART, converts them to pr
                                                   ▼
                                      ┌─────────────────────────────┐
                                      │   Bay Computer              │
-                                     │   100.120.214.69:50051      │
+                                     │   <BAY_COMP_IP>:50051       │
                                      │                             │
                                      │  cellular_parser (Docker)   │
                                      │  - Parse CAN (DBC)          │
@@ -65,7 +65,7 @@ sunlite/
 
 ### Software
 - Python 3.10+
-- Network connectivity to bay computer (`100.120.214.69:50051`)
+- Network connectivity to bay computer (`BAY_COMP_IP:50051`)
 - `cellular_parser` Docker container running on bay computer (Sunlink side)
 
 **Note:** The Sunlite and Bay Computer IP might change. More on this later.
@@ -88,7 +88,7 @@ source .venv/bin/activate
 ### 3. Install Dependencies
 ```bash
 pip install --upgrade pip
-pip install -r requirements.txt
+pip install -r gRPC_cellular/requirements.txt
 ```
 
 ### 4. Configure Environment
@@ -104,7 +104,7 @@ TEL_UART_PORT=/dev/serial/by-id/usb-FTDI_C232HM-DDHSL-0_FT1K72V9-if00-port0
 TEL_UART_BAUD=230400
 
 # gRPC server
-INGEST_SERVER=100.120.214.69:50051
+INGEST_SERVER=<BAY_COMP_IP>:50051
 
 # Batching
 BATCH_SIZE=1000
@@ -131,7 +131,7 @@ Then set `TEL_UART_PORT` accordingly.
 |----------|-------------|---------|-------|
 | `TEL_UART_PORT` | UART device path | `/dev/ttyUSB0` | Use `/dev/serial/by-id/...` for stable path |
 | `TEL_UART_BAUD` | Baud rate | `230400` | Must match TEL board |
-| `INGEST_SERVER` | gRPC endpoint | `100.120.214.69:50051` | Bay computer parser |
+| `INGEST_SERVER` | gRPC endpoint | `<BAY_COMP_IP>:50051` | Bay computer parser |
 | `BATCH_SIZE` | Frames per batch | `1000` | Tune for latency/throughput |
 | `BATCH_MAX_MS` | Max batch time (ms) | `1000` | Flush interval |
 | `GRPC_COMP` | Compression mode | `gzip` | Options: `gzip`, `none` |
@@ -141,7 +141,7 @@ Then set `TEL_UART_PORT` accordingly.
 
 ### Step 1: Start Bay Computer Parser (Required — do this first)
 ```bash
-ssh electrical@100.120.214.69
+ssh electrical@<BAY_COMP_IP>
 
 cd /home/electrical/sunlink
 source environment/bin/activate
@@ -159,7 +159,7 @@ docker compose ps
 
 Run from the repo root (`sunlite/`):
 ```bash
-ssh sunlite@100.117.111.10
+ssh sunlite@<RASPI_IP>
 
 cd /home/sunlite/sunlite
 source .venv/bin/activate
@@ -173,7 +173,7 @@ python -m src.grpc_cellular.rpi_cellular
 
 Expected output:
 ```
-[RPi] UART open on /dev/ttyUSB0@230400, streaming to 100.120.214.69:50051
+[RPi] UART open on /dev/ttyUSB0@230400, streaming to <BAY_COMP_IP>:50051
 [RPi] stream closed, server ack: 773661 frames
 ```
 
@@ -212,7 +212,7 @@ The IP addresses for the Raspberry Pi (sunlite) and bay computer may change. Bot
 tailscale status
 ```
 
-Update `INGEST_SERVER` in `.env` if the bay computer IP has changed.
+Update `INGEST_SERVER` in `.env`.
 
 ### Common Issues
 
@@ -230,7 +230,7 @@ Update `INGEST_SERVER` in `.env` if the bay computer IP has changed.
 **gRPC connection failed**
 - Check bay computer is reachable:
 ```bash
-  ping 100.120.214.69
+  ping <BAY_COMP_IP>
 ```
 - Confirm parser container is running on bay computer:
 ```bash
@@ -265,7 +265,7 @@ BATCH_MAX_MS=2000
 
 **Bay Computer:**
 ```bash
-ssh electrical@100.120.214.69
+ssh electrical@<BAY_COMP_IP>
 cd /home/electrical/sunlink
 source environment/bin/activate
 docker compose down && docker compose up -d
@@ -273,7 +273,7 @@ docker compose down && docker compose up -d
 
 **Raspberry Pi:**
 ```bash
-ssh sunlite@100.117.111.10
+ssh sunlite@<RASPI_IP>
 cd /home/sunlite/sunlite
 source .venv/bin/activate
 set -a && source .env && set +a
@@ -282,7 +282,7 @@ python -m src.grpc_cellular.rpi_cellular
 
 ### Rebuild Parser Container (bay computer)
 ```bash
-ssh electrical@100.120.214.69
+ssh electrical@<BAY_COMP_IP>
 cd /home/electrical/sunlink
 docker compose down
 docker compose build
