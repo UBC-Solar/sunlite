@@ -88,7 +88,7 @@ source .venv/bin/activate
 ### 3. Install Dependencies
 ```bash
 pip install --upgrade pip
-pip install -r gRPC_cellular/requirements.txt
+pip install -r src/gRPC_cellular/requirements.txt
 ```
 
 ### 4. Configure Environment
