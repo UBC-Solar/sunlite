@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
 import os, sys, time, struct, serial, grpc, threading
 from collections import deque
-
+from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv()
+
+REPO_ROOT = Path(__file__).resolve().parents[2]      # sunlite/
+PROTO_DIR = REPO_ROOT / "tools" / "proto"           # sunlite/tools/proto
+
+sys.path.insert(0, str(REPO_ROOT))
+sys.path.insert(0, str(PROTO_DIR))
 
 # import generated stubs (you can copy tools/proto/ into the Pi or pip-install from your repo)
 from tools.proto import canlink_pb2, canlink_pb2_grpc
