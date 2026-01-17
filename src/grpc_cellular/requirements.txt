@@ -1,0 +1,6 @@
+grpcio>=1.57
+protobuf>=4.25
+pyserial>=3.5
+python-dotenv>=1.0.0
+# Only needed if you want to re-generate stubs on the Pi
+grpcio-tools>=1.57
