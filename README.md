@@ -67,14 +67,19 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     To clone the main (production) repository of Sunlite use this command:
 
     ```bash
-    git clone https://github.com/UBC-Solar/sunlite.git 
+    git clone --recurse-submodules https://github.com/UBC-Solar/sunlite.git 
     cd sunlite
     ```
+    **Recommended Everytime you Open Sunlite**
+    ```bash
+    python .\update_can.py
+    ```
+    The submodule update is required everytime for **Suncan** submodule changes. Do it everytime to have up to date dbc file.
 
     When doing testing on a RPI, branches can be cloned as well:
 
     ```bash
-    git clone --branch <branch-name> https://github.com/UBC-Solar/sunlite.git 
+    git clone --recurse-submodules --branch <branch-name> https://github.com/UBC-Solar/sunlite.git 
     cd sunlite
     ```
 
