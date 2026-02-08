@@ -72,8 +72,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     ```
     **Recommended Everytime you Open Sunlite**
     ```bash
-    git pull
-    git submodule update --init --recursive
+    python .\update_can.py
     ```
     The submodule update is required everytime for **Suncan** submodule changes. Do it everytime to have up to date dbc file.
 
