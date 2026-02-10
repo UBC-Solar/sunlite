@@ -78,6 +78,7 @@ Follow the steps below to fully install, configure, and run Sunlite's RPI-based 
     git pull
     cd ..
     ```
+    
     The submodule update is required everytime for **Suncan** submodule changes. Do it everytime to have up to date dbc file.
 
     When doing testing on a RPI, branches can be cloned as well:
